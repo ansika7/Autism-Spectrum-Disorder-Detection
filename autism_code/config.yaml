@@ -1,0 +1,59 @@
+# =========================================================
+#  ASD Detection Pipeline — Post-Augmentation Config
+# =========================================================
+
+dataset:
+  augmented_dir: "data/augmented"
+  image_size: 224
+  classes:
+    - "autistic"
+    - "control"
+  norm_mean: [0.485, 0.456, 0.406]
+  norm_std:  [0.229, 0.224, 0.225]
+
+model:
+  cnn_backbone:    "xception"
+  cnn_pretrained:  true
+  cnn_feature_dim: 512
+
+  vit_backbone:    "vit_small_patch16_224"
+  vit_pretrained:  true
+  vit_feature_dim: 512
+
+  fusion_type:       "attention"
+  fusion_hidden_dim: 256
+  fusion_num_heads:  4
+
+  num_classes:  2
+  dropout_rate: 0.4
+
+training:
+  epochs:           30 
+  batch_size:       16
+  num_workers:      0
+  pin_memory:       false
+  device:           "auto"
+
+  warmup_epochs:    5
+
+  optimizer:        "adamw"
+  learning_rate:    1.0e-4
+  weight_decay:     1.0e-4
+
+  scheduler:        "cosine"
+  scheduler_t_max:  30
+  scheduler_eta_min: 1.0e-6
+
+  focal_loss_gamma:         3.0
+  use_weighted_sampler:     true
+  early_stopping_patience:  210
+  gradient_clip:            1.0
+
+  save_dir: "outputs/checkpoints"
+  log_dir:  "outputs/logs"
+
+explainability:
+  output_dir:    "outputs/explanations"
+  num_samples:   16
+  overlay_alpha: 0.5
+  colormap:      "jet"
